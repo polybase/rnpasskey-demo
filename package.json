@@ -9,10 +9,18 @@
     "ios": "npx pod-install && expo run:ios"
   },
   "dependencies": {
+    "@react-navigation/native": "6.x",
+    "@react-navigation/native-stack": "6.x",
     "expo": "~53.0.9",
+    "expo-build-properties": "~0.14.6",
+    "expo-dev-client": "~5.1.8",
     "expo-status-bar": "~2.2.3",
+    "expo-updates": "~0.28.13",
     "react": "19.0.0",
-    "react-native": "0.79.2"
+    "react-native": "0.79.2",
+    "react-native-passkey": "^3.1.0",
+    "react-native-safe-area-context": "^5.4.1",
+    "react-native-screens": "^4.11.1"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
