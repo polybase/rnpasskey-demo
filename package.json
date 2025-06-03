@@ -1,0 +1,23 @@
+{
+  "name": "rnpasskey-demo",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "scripts": {
+    "start": "expo start",
+    "setup": "bash scripts/setup.sh",
+    "android": "expo run:android",
+    "ios": "npx pod-install && expo run:ios"
+  },
+  "dependencies": {
+    "expo": "~53.0.9",
+    "expo-status-bar": "~2.2.3",
+    "react": "19.0.0",
+    "react-native": "0.79.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.25.2",
+    "@types/react": "~19.0.10",
+    "typescript": "~5.8.3"
+  },
+  "private": true
+}
