@@ -15,5 +15,12 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     height: 40,
+  },
+  textInput: {
+    borderWidth: 2,
+    borderColor: '#c0c0c0',
+    width: '80%',
+    paddingLeft: 5,
+    height: 40,
   }
 })
