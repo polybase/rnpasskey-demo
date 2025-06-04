@@ -1,0 +1,9 @@
+[{
+  "relation": ["delegate_permission/common.get_login_creds"],
+  "target" : { "namespace": "android_app", "package_name": "com.timmyjose.passkeydemo",
+               "sha256_cert_fingerprints": ["A3:28:2A:CF:25:2E:89:F8:30:F9:52:EA:42:51:81:2E:E9:B6:28:00:06:B0:0D:C4:36:09:EE:F7:16:33:F1:AA"] }
+},
+{
+  "relation": ["delegate_permission/common.get_login_creds"],
+  "target" : { "namespace": "web", "site": "https://a6cb-2406-7400-51-7356-cddf-503d-9b49-3c0e.ngrok-free.app" }
+}]

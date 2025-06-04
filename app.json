@@ -1,12 +1,12 @@
 {
   "expo": {
-    "name": "rnpasskey-demo",
-    "slug": "rnpasskey-demo",
+    "name": "RNPasskeyDemo",
+    "slug": "passkey-demo",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "newArchEnabled": true,
+    "newArchEnabled": false,
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
@@ -14,7 +14,11 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.timmyjose.rnpasskeydemo"
+      "bundleIdentifier": "com.timmyjose.passkeydemo",
+      "associatedDomains": [
+        "webcredentials:a6cb-2406-7400-51-7356-cddf-503d-9b49-3c0e.ngrok-free.app"
+      ],
+      "appleTeamId": "N8XNN99644"
     },
     "android": {
       "adaptiveIcon": {
@@ -22,13 +26,27 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.timmyjose.rnpasskeydemo"
+      "package": "com.timmyjose.passkeydemo"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "expo-build-properties"
-    ]
+      "expo-build-properties",
+      [
+        "./src/plugins/withAndroidAssetStatements.js",
+        {
+          "site": "https://a6cb-2406-7400-51-7356-cddf-503d-9b49-3c0e.ngrok-free.app",
+          "sha256": "A3:28:2A:CF:25:2E:89:F8:30:F9:52:EA:42:51:81:2E:E9:B6:28:00:06:B0:0D:C4:36:09:EE:F7:16:33:F1:AA",
+          "packageName": "com.timmyjose.passkeydemo"
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "273fda5b-396d-45fd-b597-e820cfd21900"
+      }
+    },
+    "owner": "timmyjose"
   }
 }
