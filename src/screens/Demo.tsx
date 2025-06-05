@@ -22,6 +22,7 @@ const Demo = () => {
         ...RegRequest,
       }
 
+      console.warn(`request rp id = ${requestJson.rp.id}`)
       const result = await Passkey.create(requestJson)
       console.log('Registration result: ', result)
     } catch (e) {

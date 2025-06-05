@@ -3,5 +3,5 @@
   "allowCredentials": [],
   "timeout": 1800000,
   "userVerification": "required",
-  "rpId": "a6cb-2406-7400-51-7356-cddf-503d-9b49-3c0e.ngrok-free.app"
+  "rpId": "passkey-assets-hosting.web.app"
 }

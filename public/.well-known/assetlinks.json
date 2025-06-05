@@ -5,5 +5,5 @@
 },
 {
   "relation": ["delegate_permission/common.get_login_creds"],
-  "target" : { "namespace": "web", "site": "https://hot-humans-begin.loca.lt" }
+  "target" : { "namespace": "web", "site": "https://passkey-assets-hosting.web.app" }
 }]
