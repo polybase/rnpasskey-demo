@@ -1,14 +1,11 @@
+import { PasskeyCreateRequest, PasskeyCreateResult } from 'react-native-passkey'
 import { SERVER_URL } from './constants'
-import { HealthResponse } from './model'
+import { AuthenticationFinishRequest, AuthenticationFinishResponse, AuthenticationStartRequest, AuthenticationStartResponse, HealthResponse, RegistrationRequest } from './model'
 
 type Method = 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE'
 
-// primitives
-
 const send = async<T>(url: string, method: Method, headers: Record<string, string>,  body?: any): Promise<T> => {
   const sendUrl = `${SERVER_URL}/${url}`
-  console.warn('About to send request to server')
-
   const fetchOptions: RequestInit = {
     method,
     headers: {
@@ -18,7 +15,7 @@ const send = async<T>(url: string, method: Method, headers: Record<string, strin
   }
 
   if (method !== 'GET' && body !== undefined) {
-    fetchOptions.body = body
+    fetchOptions.body = JSON.stringify(body)
   }
 
   const res = await fetch(sendUrl, fetchOptions)
@@ -41,4 +38,20 @@ const post = async <T>(url: string, body: any): Promise<T> => {
 
 export const getServerHealth = async (): Promise<HealthResponse> => {
   return get<HealthResponse>('health')
+}
+
+export const startRegistration = async (req: RegistrationRequest): Promise<PasskeyCreateRequest> => {
+  return post<PasskeyCreateRequest>('registration/start', req)
+}
+
+export const finishRegistration = async (req: PasskeyCreateResult): Promise<void> => {
+  return post<void>('registration/finish', req)
+}
+
+export const startAuthentication = async (req: AuthenticationStartRequest): Promise<AuthenticationStartResponse> => {
+  return post<AuthenticationStartResponse>('authentication/start', req)
+}
+
+export const finishAuthentication = async (req: AuthenticationFinishRequest): Promise<AuthenticationFinishResponse> => {
+  return post<AuthenticationFinishResponse>('authentication/finish', req)
 }
