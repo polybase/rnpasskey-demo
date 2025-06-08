@@ -11,7 +11,7 @@ const Home = () => {
   return (
     <SafeAreaView style={styles.container}>
       <Pressable
-        style={styles.button}
+        style={styles.smallButton}
         onPress={() => navigation.navigate('Demo')}>
         <Text>Demo</Text>
       </Pressable>

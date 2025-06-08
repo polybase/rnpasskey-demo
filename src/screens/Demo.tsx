@@ -3,17 +3,16 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../App'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { styles } from '../styles'
-import { Button, Pressable, Text, TextInput } from 'react-native'
+import { Pressable, Text, TextInput } from 'react-native'
 import { Passkey } from 'react-native-passkey'
 import RegRequest from '../testData/RegRequest.json'
 import AuthRequest from '../testData/AuthRequest.json'
 import { useState } from 'react'
 
-
 const Demo = () => {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>()
   
-  const [email, setEmail] = useState<string>('')
+  const [passkeyName, setPassKeyName] = useState<string>('')
   const [passkeySupported, setPasskeySupported] = useState<boolean>(false)
 
   const createAccount = async () => {
@@ -44,18 +43,22 @@ const Demo = () => {
   }
 
 const isSupported = async() => {
-  const res = await Passkey.isSupported()
+  const res = Passkey.isSupported()
   setPasskeySupported(res)
 }
 
   return (
     <SafeAreaView style={styles.container}>
       {passkeySupported && <Text>Passkey Supported</Text>}
-       <TextInput style={styles.textInput}
-          autoCapitalize='none'
-          placeholder="email"
-          value={email}
-          onChangeText={setEmail} />
+      <TextInput style={styles.textInput}
+         autoCapitalize='none'
+         placeholder="passkey name - username or email"
+         value={passkeyName}
+         onChangeText={setPassKeyName} />
+       <Pressable style={styles.button}
+          onPress={isSupported}>
+        <Text>Passkey Supported?</Text>
+      </Pressable>
        <Pressable style={styles.button}
           onPress={createAccount}>
         <Text>Create Account</Text>
@@ -64,12 +67,8 @@ const isSupported = async() => {
           onPress={authenticateAccount}>
         <Text>Authenticate</Text>
       </Pressable>
-       <Pressable style={styles.button}
-          onPress={isSupported}>
-        <Text>Passkey Supported?</Text>
-      </Pressable>
       <Pressable
-        style={styles.button}
+        style={styles.smallButton}
         onPress={() => navigation.navigate('Home')}>
         <Text>Home</Text>
       </Pressable>

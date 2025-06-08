@@ -16,6 +16,16 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     height: 40,
   },
+  smallButton: {
+    backgroundColor: '#c0c0c0',
+    padding: 10,
+    borderRadius: 5,
+    margin: 10,
+    width: '30%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 40,
+  },
   textInput: {
     borderWidth: 2,
     borderColor: '#c0c0c0',
