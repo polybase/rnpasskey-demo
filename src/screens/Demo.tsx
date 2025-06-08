@@ -4,11 +4,10 @@ import { RootStackParamList } from '../App'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { styles } from '../styles'
 import { Pressable, Text, TextInput } from 'react-native'
-import { Passkey, PasskeyCreateRequest, PasskeyCreateResult } from 'react-native-passkey'
-import AuthRequest from '../testData/AuthRequest.json'
+import { Passkey, PasskeyCreateResult } from 'react-native-passkey'
 import { useState } from 'react'
 import { RegistrationStartResponse } from '../model'
-import { finishRegistration, startRegistration } from '../gateway'
+import { finishAuthentication, finishRegistration, startAuthentication, startRegistration } from '../gateway'
 
 const Demo = () => {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>()
@@ -30,8 +29,8 @@ const Demo = () => {
       console.warn(`passkeyRegRes = ${JSON.stringify(passkeyRegRes, null, 2)}`)
 
       // 2. Finish the registration
-      const regFinishRes = await finishRegistration(username, passkeyRegRes)
-      console.warn(`regFinishRes = ${JSON.stringify(regFinishRes, null, 2)}`)
+      await finishRegistration(username, passkeyRegRes)
+      console.warn('Registration successful!')
     } catch (err: any) {
       console.error(err)
     }
@@ -39,14 +38,24 @@ const Demo = () => {
 
   const authenticateAccount = async () => {
     try {
-      const requestJson = {
-        ...AuthRequest,
-      }
+      if (!username || username.length === 0) return
 
-      const result = await Passkey.get(requestJson)
-      console.log('Authentication result = ', result)
-    } catch (e) {
-      console.log(e)
+      // 1. Start authentication
+      const authStartRes = await startAuthentication(username)
+      console.warn(`authStartRes = ${JSON.stringify(authStartRes, null, 2)}`)
+
+      // 2. Call Passkey.get() with publicKey options from backend
+      const assertionRes = await Passkey.get(authStartRes.publicKey)
+      console.warn(`assertionRes = ${JSON.stringify(assertionRes, null, 2)}`)
+
+      // 3. Send it to backend to finish authentication
+      await finishAuthentication(username, assertionRes)
+
+      // Optional: indicate success
+      alert('Authentication successful!')
+    } catch (err: any) {
+      console.error(err)
+      alert(`Authentication failed: ${err.message}`)
     }
   }
 
@@ -73,7 +82,7 @@ const isSupported = async() => {
         <Text>Create Account</Text>
       </Pressable>
        <Pressable style={styles.button}
-          disabled={true}
+          disabled={username === undefined || username.length === 0}
           onPress={authenticateAccount}>
         <Text>Authenticate</Text>
       </Pressable>

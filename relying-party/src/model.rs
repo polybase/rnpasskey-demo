@@ -1,4 +1,4 @@
-use serde::{Deserialize, Serialize};
+use serde::Serialize;
 
 #[derive(Debug, Serialize)]
 pub struct HealthResponse {
@@ -12,10 +12,4 @@ pub struct RegistrationFinishResponse;
 // Authentication
 
 #[derive(Debug, Serialize)]
-pub struct AuthenticationStartResponse {}
-
-#[derive(Debug, Deserialize)]
-pub struct AuthenticationFinishRequest {}
-
-#[derive(Debug, Serialize)]
-pub struct AuthenticationFinishResponse {}
+pub struct AuthenticationFinishResponse;

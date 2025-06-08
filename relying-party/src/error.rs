@@ -19,6 +19,9 @@ pub enum Error {
 
     #[error("Registration state is corrupted: {0}")]
     CorruptRegistrationState(String),
+
+    #[error("Authentication state is corrupted: {0}")]
+    CorruptAuthenticationState(String),
 }
 
 impl ResponseError for Error {

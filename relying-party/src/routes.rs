@@ -1,9 +1,6 @@
 use crate::{
     error::{Error, Result},
-    model::{
-        AuthenticationFinishRequest, AuthenticationFinishResponse, AuthenticationStartResponse,
-        HealthResponse, RegistrationFinishResponse,
-    },
+    model::{AuthenticationFinishResponse, HealthResponse, RegistrationFinishResponse},
     RegistrationState, UserData,
 };
 use actix_web::{
@@ -111,21 +108,91 @@ pub async fn finish_registration(
         .and_modify(|keys| keys.push(sk.clone()))
         .or_insert_with(|| vec![sk.clone()]);
 
+    // store the mapping to be used in the authentication phase
+    users_guard
+        .name_to_id
+        .insert(username.clone(), user_unique_id);
+
     Ok(web::Json(RegistrationFinishResponse))
 }
 
 #[post("/authentication/start/{username}")]
 pub async fn start_authentication(
     username: web::Path<String>,
-) -> Result<web::Json<AuthenticationStartResponse>> {
+    webauthn: web::Data<Webauthn>,
+    webauthn_users: web::Data<Mutex<UserData>>,
+) -> Result<web::Json<RequestChallengeResponse>> {
+    let username = username.into_inner();
     info!("start_authentication, username = {username:#?}");
-    todo!()
+
+    let mut users_guard = webauthn_users.lock().await;
+
+    let user_unique_id = users_guard
+        .name_to_id
+        .get(&username)
+        .copied()
+        .ok_or(Error::UserNotFound)?;
+
+    let allow_credentials = users_guard
+        .keys
+        .get(&user_unique_id)
+        .ok_or(Error::UserHasNoCredentials)?;
+
+    let (rcr, auth_state) = webauthn
+        .start_passkey_authentication(allow_credentials)
+        .map_err(|e| {
+            info!("challenge_authenticate -> {:?}", e);
+            Error::Unknown(e)
+        })?;
+
+    users_guard.auth_states.insert(username.clone(), auth_state);
+
+    Ok(web::Json(rcr))
 }
 
-#[post("/authentication/finish")]
+#[post("/authentication/finish/{username}")]
 pub async fn finish_authentication(
-    body: web::Json<AuthenticationFinishRequest>,
+    username: web::Path<String>,
+    body: web::Json<PublicKeyCredential>,
+    webauthn: web::Data<Webauthn>,
+    webauthn_users: web::Data<Mutex<UserData>>,
 ) -> Result<web::Json<AuthenticationFinishResponse>> {
-    info!("finish_authentication, body = {body:#?}");
-    todo!()
+    info!("finish_authentication, username = {username:?}, body = {body:?}");
+    let username = username.into_inner();
+
+    let mut users_guard = webauthn_users.lock().await;
+
+    let user_unique_id = users_guard
+        .name_to_id
+        .get(&username)
+        .copied()
+        .ok_or(Error::UserNotFound)?;
+
+    let auth_state =
+        users_guard
+            .auth_states
+            .remove(&username)
+            .ok_or(Error::CorruptAuthenticationState(format!(
+                "Missing authentication state for: {username}"
+            )))?;
+
+    let auth_result = webauthn
+        .finish_passkey_authentication(&body, &auth_state)
+        .map_err(|e| {
+            info!("finish_passkey_authentication error -> {:?}", e);
+            Error::BadRequest(e)
+        })?;
+
+    // Update the credential (e.g., counter)
+    users_guard
+        .keys
+        .get_mut(&user_unique_id)
+        .map(|keys| {
+            keys.iter_mut().for_each(|sk| {
+                sk.update_credential(&auth_result);
+            });
+        })
+        .ok_or(Error::UserHasNoCredentials)?;
+
+    Ok(web::Json(AuthenticationFinishResponse))
 }

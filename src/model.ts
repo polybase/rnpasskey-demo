@@ -1,4 +1,4 @@
-import { PasskeyCreateRequest } from 'react-native-passkey'
+import { PasskeyCreateRequest, PasskeyGetRequest } from 'react-native-passkey'
 
 export interface HealthResponse {
   status: string | undefined
@@ -13,13 +13,5 @@ export interface RegistrationStartResponse {
 // Authentication
 
 export interface AuthenticationStartResponse {
-
-}
-
-export interface AuthenticationFinishRequest {
-
-}
-
-export interface AuthenticationFinishResponse {
-
+  publicKey: PasskeyGetRequest
 }

@@ -1,6 +1,6 @@
 use actix_cors::Cors;
 use actix_server::Server;
-use actix_web::{web, App, HttpServer};
+use actix_web::{middleware, web, App, HttpServer};
 use log::info;
 use std::collections::HashMap;
 use tokio::sync::Mutex;
@@ -18,6 +18,7 @@ pub(crate) struct UserData {
     pub(crate) name_to_id: HashMap<String, Uuid>,
     pub(crate) keys: HashMap<Uuid, Vec<Passkey>>,
     pub(crate) reg_states: HashMap<String, RegistrationState>,
+    pub(crate) auth_states: HashMap<String, PasskeyAuthentication>,
 }
 
 pub(crate) struct RegistrationState {
@@ -38,6 +39,7 @@ fn startup() -> (web::Data<Webauthn>, web::Data<Mutex<UserData>>) {
         name_to_id: HashMap::new(),
         keys: HashMap::new(),
         reg_states: HashMap::new(),
+        auth_states: HashMap::new(),
     }));
 
     info!("Finished setting up webauthn and webauthn-rs in-memory db");
@@ -52,6 +54,7 @@ pub fn create_server(port: u16) -> eyre::Result<Server> {
         let cors = Cors::permissive();
         App::new()
             .wrap(cors)
+            .wrap(middleware::Logger::default())
             .app_data(webauthn.clone())
             .app_data(webauthn_users.clone())
             .service(routes::health)

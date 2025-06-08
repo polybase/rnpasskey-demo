@@ -1,6 +1,6 @@
-import { PasskeyCreateRequest, PasskeyCreateResult } from 'react-native-passkey'
+import { PasskeyCreateRequest, PasskeyCreateResult, PasskeyGetResult } from 'react-native-passkey'
 import { SERVER_URL } from './constants'
-import { AuthenticationFinishRequest, AuthenticationFinishResponse, AuthenticationStartResponse, HealthResponse, RegistrationStartResponse } from './model'
+import { AuthenticationStartResponse, HealthResponse, RegistrationStartResponse } from './model'
 
 type Method = 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE'
 
@@ -52,6 +52,6 @@ export const startAuthentication = async (username: string): Promise<Authenticat
   return post<AuthenticationStartResponse>(`authentication/start/${username}`)
 }
 
-export const finishAuthentication = async (req: AuthenticationFinishRequest): Promise<AuthenticationFinishResponse> => {
-  return post<AuthenticationFinishResponse>('authentication/finish', req)
+export const finishAuthentication = async (username: string, req: PasskeyGetResult): Promise<void> => {
+  return post<void>(`authentication/finish/${username}`, req)
 }
