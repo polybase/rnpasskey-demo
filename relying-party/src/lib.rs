@@ -17,6 +17,12 @@ static RP_ID: &'static str = "passkey-assets-hosting.web.app";
 pub(crate) struct UserData {
     pub(crate) name_to_id: HashMap<String, Uuid>,
     pub(crate) keys: HashMap<Uuid, Vec<Passkey>>,
+    pub(crate) reg_states: HashMap<String, RegistrationState>,
+}
+
+pub(crate) struct RegistrationState {
+    pub(crate) user_unique_id: String,
+    pub(crate) reg_state: PasskeyRegistration,
 }
 
 fn startup() -> (web::Data<Webauthn>, web::Data<Mutex<UserData>>) {
@@ -31,9 +37,10 @@ fn startup() -> (web::Data<Webauthn>, web::Data<Mutex<UserData>>) {
     let webauthn_users = web::Data::new(Mutex::new(UserData {
         name_to_id: HashMap::new(),
         keys: HashMap::new(),
+        reg_states: HashMap::new(),
     }));
 
-    info!("Finished setting up webauthn and weabauthn-rs in-memory db");
+    info!("Finished setting up webauthn and webauthn-rs in-memory db");
 
     (webauthn, webauthn_users)
 }

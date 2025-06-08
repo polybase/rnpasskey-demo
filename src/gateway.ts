@@ -1,6 +1,6 @@
 import { PasskeyCreateRequest, PasskeyCreateResult } from 'react-native-passkey'
 import { SERVER_URL } from './constants'
-import { AuthenticationFinishRequest, AuthenticationFinishResponse, AuthenticationStartRequest, AuthenticationStartResponse, HealthResponse, RegistrationRequest } from './model'
+import { AuthenticationFinishRequest, AuthenticationFinishResponse, AuthenticationStartResponse, HealthResponse, RegistrationStartResponse } from './model'
 
 type Method = 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE'
 
@@ -32,7 +32,7 @@ const get = async<T>(url: string, body?: any): Promise<T> => {
   return send(url, 'GET', {}, body)
 }
 
-const post = async <T>(url: string, body: any): Promise<T> => {
+const post = async <T>(url: string, body?: any): Promise<T> => {
   return send(url, 'POST', {}, body)
 }
 
@@ -40,16 +40,16 @@ export const getServerHealth = async (): Promise<HealthResponse> => {
   return get<HealthResponse>('health')
 }
 
-export const startRegistration = async (req: RegistrationRequest): Promise<PasskeyCreateRequest> => {
-  return post<PasskeyCreateRequest>('registration/start', req)
+export const startRegistration = async (username: string): Promise<RegistrationStartResponse> => {
+  return post<RegistrationStartResponse>(`registration/start/${username}`)
 }
 
-export const finishRegistration = async (req: PasskeyCreateResult): Promise<void> => {
-  return post<void>('registration/finish', req)
+export const finishRegistration = async (username: string, req: PasskeyCreateResult): Promise<void> => {
+  return post<void>(`registration/finish/${username}`, req)
 }
 
-export const startAuthentication = async (req: AuthenticationStartRequest): Promise<AuthenticationStartResponse> => {
-  return post<AuthenticationStartResponse>('authentication/start', req)
+export const startAuthentication = async (username: string): Promise<AuthenticationStartResponse> => {
+  return post<AuthenticationStartResponse>(`authentication/start/${username}`)
 }
 
 export const finishAuthentication = async (req: AuthenticationFinishRequest): Promise<AuthenticationFinishResponse> => {

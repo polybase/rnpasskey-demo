@@ -16,6 +16,9 @@ pub enum Error {
 
     #[error("User has no credentials")]
     UserHasNoCredentials,
+
+    #[error("Registration state is corrupted: {0}")]
+    CorruptRegistrationState(String),
 }
 
 impl ResponseError for Error {
