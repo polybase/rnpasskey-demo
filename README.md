@@ -31,4 +31,4 @@ $ yarn setup --clean && yarn ios --device
 
 ## Demo
 
-TBD
+https://linear.app/polybase/issue/ENG-2300/passkey-demo#comment-9850f2a0
