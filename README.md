@@ -1,3 +1,7 @@
+PoC to demonstrate passkeys support for `Payy`/`zk-rollup` (separate PoC for now).
+
+Currently only tested with `iOS`.
+
 ## App
 
 Uses [react-native-passkey](https://github.com/f-23/react-native-passkey)
